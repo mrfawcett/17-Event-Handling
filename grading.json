@@ -1,0 +1,6 @@
+[
+ {"test": "CounterPanelTest",      "name": "CounterPanel: button, label, count that survives clicks", "points": 30},
+ {"test": "ColorPanelTest",        "name": "ColorPanel: background cycles RED, GREEN, BLUE",         "points": 20},
+ {"test": "EchoPanelTest",         "name": "EchoPanel: text field to label",                         "points": 20},
+ {"test": "TrafficLightPanelTest", "name": "TrafficLightPanel: two buttons, one listener",           "points": 30}
+]

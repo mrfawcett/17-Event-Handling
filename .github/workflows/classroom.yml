@@ -1,0 +1,67 @@
+name: Autograding Tests
+'on':
+  - push
+  - workflow_dispatch
+  - repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - name: "CounterPanel: button, label, count that survives clicks (30)"
+        id: counterpanel
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: "CounterPanel: button, label, count that survives clicks"
+          setup-command: ''
+          command: sh .github/grade.sh CounterPanelTest
+          timeout: 5
+          max-score: 30
+      - name: "ColorPanel: background cycles RED, GREEN, BLUE (20)"
+        id: colorpanel
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: "ColorPanel: background cycles RED, GREEN, BLUE"
+          setup-command: ''
+          command: sh .github/grade.sh ColorPanelTest
+          timeout: 5
+          max-score: 20
+      - name: "EchoPanel: text field to label (20)"
+        id: echopanel
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: "EchoPanel: text field to label"
+          setup-command: ''
+          command: sh .github/grade.sh EchoPanelTest
+          timeout: 5
+          max-score: 20
+      - name: "TrafficLightPanel: two buttons, one listener (30)"
+        id: trafficlightpanel
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: "TrafficLightPanel: two buttons, one listener"
+          setup-command: ''
+          command: sh .github/grade.sh TrafficLightPanelTest
+          timeout: 5
+          max-score: 30
+      - name: Autograding Reporter
+        uses: classroom-resources/autograding-grading-reporter@v1
+        env:
+          COUNTERPANEL_RESULTS: "${{ steps.counterpanel.outputs.result }}"
+          COLORPANEL_RESULTS: "${{ steps.colorpanel.outputs.result }}"
+          ECHOPANEL_RESULTS: "${{ steps.echopanel.outputs.result }}"
+          TRAFFICLIGHTPANEL_RESULTS: "${{ steps.trafficlightpanel.outputs.result }}"
+        with:
+          runners: counterpanel,colorpanel,echopanel,trafficlightpanel
